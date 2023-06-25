@@ -11,6 +11,9 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
+  const newElementDiv = document.createElement('div');
+  newElementDiv.textContent = text;
+  return newElementDiv;
 }
 
 /*
@@ -22,6 +25,8 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
+  where.insertBefore(what, where.firstChild);
+  // where.prepend(what);
 }
 
 /*
@@ -44,6 +49,13 @@ function prepend(what, where) {
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+  const nextP = [];
+  for (const elements of where.children) {
+    if (elements.nextElementSibling && elements.nextElementSibling.tagName === 'P') {
+      nextP.push(elements);
+    }
+  }
+  return nextP;
 }
 
 /*
@@ -66,7 +78,7 @@ function findAllPSiblings(where) {
 function findError(where) {
   const result = [];
 
-  for (const child of where.childNodes) {
+  for (const child of where.children) {
     result.push(child.textContent);
   }
 
@@ -86,6 +98,22 @@ function findError(where) {
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+  for (let i = 0; i < where.childNodes.length; i++) {
+    const element = where.childNodes[i];
+
+    if (element.nodeType === Element.TEXT_NODE) {
+      where.removeChild(element);
+      i--;
+    }
+  }
+
+
+  // for (const child of where.children) {
+  //   if (child.children) {
+  //     where.remove(child)
+  //   }
+  // }
+  return where;
 }
 
 /*
@@ -109,6 +137,39 @@ function deleteTextNodes(where) {
    }
  */
 function collectDOMStat(root) {
+  const statistics = {
+    tags: {},
+    classes: {},
+    texts: 0,
+  };
+
+  function scan(root) {
+    for (const every of root.childNodes) {
+      if (every.nodeType === Node.TEXT_NODE) {
+        statistics.texts += 1;
+      } else if (every.nodeType === Node.ELEMENT_NODE) {
+        if (every.tagName in statistics.tags) {
+          statistics.tags[every.tagName] += 1;
+        } else {
+          statistics.tags[every.tagName] = 1;
+        }
+
+        for (const className of every.classList) {
+          if (className in statistics.classes) {
+            statistics.classes[className] += 1;
+          } else {
+            statistics.classes[className] = 1;
+          }
+        }
+
+        scan(every)
+      }
+    }
+  }
+
+  scan(root);
+
+  return statistics;
 }
 
 export {
