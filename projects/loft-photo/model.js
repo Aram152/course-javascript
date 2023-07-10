@@ -2,7 +2,7 @@
 
 const PERM_FRIENDS = 2;
 const PERM_PHOTOS = 4;
-const APP_ID = 51699913;
+const APP_ID = 51699988;
 
 export default {
   getRandomElement(array) {
@@ -48,23 +48,23 @@ export default {
   login() {
     return new Promise((resolve, reject) => {
       VK.init({
-        apiID: APP_ID,
+        apiId: APP_ID,
       });
 
       VK.Auth.login((response) => {
-        if (response.session) { 
+        if (response.session) {
+          this.token = response.session.sid;
           resolve(response);
         } else {
           console.error(response);
+          reject(response);
         }
       }, PERM_FRIENDS | PERM_PHOTOS);
     });
   },
 
-  logout() { },
-
   callApi(method, params) {
-    params.v = params.v || '5,120';
+    params.v = params.v || '5,131';
 
     return new Promise((resolve, reject) => {
       VK.api(method, params, (response) => {
@@ -77,10 +77,12 @@ export default {
     })
   },
 
-  getFriends() {
+  async getFriends() {
     const params = {
       fields: ["photo_50", "photo_100"],
     };
+    const r = await this.callApi('friends.get', params);
+    console.log(r);
     return this.callApi("friends.get", params);
   },
 
@@ -106,6 +108,12 @@ export default {
   },
 
   photoCache: {},
+
+  logout() { },
+
+  getFriends() { },
+
+  getUsers(ids) { },
 
 };
 

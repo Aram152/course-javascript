@@ -1,5 +1,7 @@
-// import pages from './pages';
-// import model from './model';
+import pages from './pages';
+import model from './model';
+import profilePage from './profilePage';
+
 
 export default {
     async getNextPhoto() {
@@ -19,16 +21,16 @@ export default {
 
     handleEvents() {
         let startFrom;
-        document.querySelector('.copmonent-photo').addEventListener((e) => {
+        document.querySelector('.component-photo').addEventListener('touchstart', (e) => {
             e.preventDefault();
-            startFrom = { y: e.changedTouches[0].paeY };
+            startFrom = { y: e.changedTouches[0].pageY };
         });
-        document.querySelector('.copmonent-photo').addEventListener(async (e) => {
+        document.querySelector('.component-photo').addEventListener('touchend', async (e) => {
             const direction = e.changedTouches[0].pageY - startFrom.y;
 
             if (direction < 0) {
                 await this.getNextPhoto();
-            }
+            };
         });
     },
 };
