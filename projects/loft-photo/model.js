@@ -1,8 +1,8 @@
-import { resolve } from "path";
+// import { resolve } from "path";
 
 const PERM_FRIENDS = 2;
 const PERM_PHOTOS = 4;
-const APP_ID = 5350105;
+const APP_ID = 51699913;
 
 export default {
   getRandomElement(array) {
