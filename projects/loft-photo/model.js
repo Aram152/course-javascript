@@ -19,7 +19,7 @@ export default {
     const friend = this.getRandomElement(this.friends.items);
     const photos = await this.getFriendPhotos(friend.id);
     const photo = this.getRandomElement(photos.items);
-    let size = this.findSize(photo);
+    const size = this.findSize(photo);
 
     return { friend, id: photo.id, url: size.url };
   },
